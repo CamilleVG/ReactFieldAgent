@@ -21,9 +21,9 @@ function AgentsList() {
   }, []); // An empty dependency array tells to run our side effect once when the component is initially loaded.
 
   const handleDeleteAgent = (agentId) => {
-    const agent = agents.find(agent => agent.id === agentId);
+    const agent = agents.find(agent => agent.agentId === agentId);
 
-    if (window.confirm(`Delete agent ${agent.dob}-${agent.lastName}-${agent.firstName}?`)) {
+    if (window.confirm(`Delete agent ${agent.agentId}-${agent.firstName}-${agent.lastName}?`)) {
       const init = {
         method: 'DELETE'
       };
@@ -41,7 +41,14 @@ function AgentsList() {
             return Promise.reject(`Unexpected status code: ${response.status}`);
           }
         })
-        .catch(console.log);
+        .then(data => {
+              // UPDATED: Pass second argument
+              history.push("/confirmation", { msg: "Deleted agent" });
+            })
+            .catch(() => {
+              // UPDATED: Pass second argument
+              history.push("/error", { msg: "Failed to delete agent" });
+            });
     }
   };
 
@@ -74,7 +81,7 @@ function AgentsList() {
                                 <th scope="col">Middle</th>
                                 <th scope="col">Last</th><th scope="col">
                                 <div className="float-right mr-2">
-                                    <Link className="btn btn-outline-primary btn-sm mr-2" to={`/${1}`}>
+                                    <Link className="btn btn-outline-primary btn-sm mr-2" to={`/${expand}`}>
                                         <i className="bi bi-pencil-square"></i> ... Expand
                                     </Link>
                                 </div>
@@ -92,10 +99,10 @@ function AgentsList() {
               {expand ? <td></td> : <></>}
               <td>
                 <div className="float-right mr-2">
-                  <Link className="btn btn-primary btn-sm mr-2" to={`/agents/edit/${agent.id}`}>
+                  <Link className="btn btn-primary btn-sm mr-2" to={`/agents/edit/${agent.agentId}`}>
                     <i className="bi bi-pencil-square"></i> Edit
                   </Link>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAgent(agent.id)}>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAgent(agent.agentId)}>
                     <i className="bi bi-trash"></i> Delete
                   </button>
                 </div>

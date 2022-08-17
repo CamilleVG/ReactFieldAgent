@@ -8,8 +8,8 @@ function NavBar() {
           <a class="nav-link" href="/">Agents</a>
         </li>
         <li class="nav-item">
-                  <a class="nav-link" href="/:expand">Expand</a>
-                </li>
+            <a class="nav-link" href="/:expand">Expand</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/agents/add">Add</a>
         </li>

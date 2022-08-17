@@ -65,6 +65,7 @@ function AgentForm() {
   };
 
   const addAgent = () => {
+  if (window.confirm(`Add agent ${agent.firstName} ${agent.lastName}?`)) {
     const init = {
       method: 'POST',
       headers: {
@@ -82,49 +83,21 @@ function AgentForm() {
         }
       })
       .then(data => {
-        if (data.id) {
-          /*
-
-          On the happy path, "data" is an object that looks this:
-
-          {
-            "id": 30,
-            "section": "The Ridge",
-            "row": 202,
-            "column": 201,
-            "yearInstalled": 2000,
-            "material": "MONO_SI",
-            "tracking": true
-          }
-
-          */
-
+        if (data.agentId) {
           // Send the user back to the list route.
-          history.push('/');
+          history.push('/confirmation', { msg: "Added agent" });
         } else {
-          /*
-
-          On the unhappy path, "data" is an array that looks this:
-
-          [
-            "SolarPanel `section` is required.",
-            "SolarPanel `row` must be a positive number less than or equal to 250.",
-            "SolarPanel `column` must be a positive number less than or equal to 250.",
-            "SolarPanel `material` is required."
-          ]
-
-          */
-
           setErrors(data);
         }
       })
-      .catch(console.log);
-  };
+      .catch(() => {
+              // otherwise redirect the user to the error route
+              history.push("/error", { msg: "Failed to add agent" });
+            });
+  }};
 
   const updateAgent = () => {
-    // assign an ID (this is probably needed anymore)
-    agent.id = id;
-
+    if (window.confirm(`Update agent ${agent.agentId} ${agent.firstName} ${agent.lastName}?`)) {
     const init = {
       method: 'PUT',
       headers: {
@@ -146,13 +119,16 @@ function AgentForm() {
       .then(data => {
         if (!data) {
           // Send the user back to the list route.
-          history.push('/');
+          history.push('/confirmation', { msg: "Updated agent" });
         } else {
           setErrors(data);
         }
       })
-      .catch(console.log);
-  };
+      .catch(() => {
+              // otherwise redirect the user to the error route
+              history.push("/error", { msg: "Failed to update agent" });
+            });
+  } };
 
   return (
     <main>
@@ -172,17 +148,17 @@ function AgentForm() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="firstName">First:</label>
-          <input id="first" name="first" type="text" className="form-control"
+          <input id="firstName" name="firstName" type="text" className="form-control"
             value={agent.firstName} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="middleName">Middle:</label>
-          <input id="middle" name="middle" type="text" className="form-control"
+          <input id="middleName" name="middleName" type="text" className="form-control"
             value={agent.middleName} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="lastName">Last:</label>
-          <input id="last" name="last" type="text" className="form-control"
+          <input id="lastName" name="lastName" type="text" className="form-control"
             value={agent.lastName} onChange={handleChange} />
         </div>
         <div className="form-group">
@@ -190,6 +166,11 @@ function AgentForm() {
           <input id="dob" name="dob" type="text" className="form-control"
             value={agent.dob} onChange={handleChange} />
         </div>
+        <div className="form-group">
+                  <label htmlFor="heightInInches">Height (inches):</label>
+                  <input id="heightInInches" name="heightInInches" type="number" className="form-control"
+                    value={agent.heightInInches} onChange={handleChange} />
+                </div>
         <div className="mt-4">
           <button className="btn btn-success mr-2" type="submit">
             <i className="bi bi-file-earmark-check"></i> {id ? 'Update Agent' : 'Add Agent'}

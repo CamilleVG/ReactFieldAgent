@@ -1,9 +1,9 @@
-import Home from "./components/Home";
-import AddAgent from "./components/AddAgent";
-import EditAgent from "./components/EditAgent";
 import NavBar from "./components/NavBar";
+import NotFound from "./components/NotFound";
 import AgentsList from "./components/AgentsList";
 import AgentForm from "./components/AgentForm";
+import Error from "./components/Error";
+import Confirmation from "./components/Confirmation";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -12,19 +12,25 @@ function App() {
       <NavBar />
       <Router>
         <Switch>
-        <Route path="/agents/edit/:id">
-                    <AgentForm />
-                  </Route>
-        <Route path="/agents/add">
-                    <AgentForm />
-                  </Route>
-                  <Route path="/:expand">
-                                                <AgentsList />
-                                              </Route>
-          <Route path="/">
-            <AgentsList />
-          </Route>
+            <Route exact path={["/agents/edit/:id", "/agents/add"]}>
+                <AgentForm />
+            </Route>
 
+            <Route path="/confirmation">
+                <Confirmation />
+            </Route>
+
+            <Route path="/error">
+                <Error />
+            </Route>
+
+            <Route exact path={["/", "/:expand"]}>
+                <AgentsList />
+            </Route>
+
+            <Route>
+                <NotFound />
+            </Route>;
         </Switch>
       </Router>
     </>
