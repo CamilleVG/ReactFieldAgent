@@ -1,10 +1,9 @@
-import About from "./components/About";
 import Home from "./components/Home";
 import AddAgent from "./components/AddAgent";
 import EditAgent from "./components/EditAgent";
-import DeleteAgent from "./components/DeleteAgent";
 import NavBar from "./components/NavBar";
 import AgentsList from "./components/AgentsList";
+import AgentForm from "./components/AgentForm";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -13,21 +12,19 @@ function App() {
       <NavBar />
       <Router>
         <Switch>
-        <Route path="/agents/delete/:id">
-                    <DeleteAgent />
-                  </Route>
         <Route path="/agents/edit/:id">
-                    <EditAgent />
+                    <AgentForm />
                   </Route>
         <Route path="/agents/add">
-                    <AddAgent />
+                    <AgentForm />
                   </Route>
-          <Route path="/about">
-            <About />
-          </Route>
+                  <Route path="/:expand">
+                                                <AgentsList />
+                                              </Route>
           <Route path="/">
             <AgentsList />
           </Route>
+
         </Switch>
       </Router>
     </>

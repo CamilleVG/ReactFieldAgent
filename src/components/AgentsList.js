@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 function AgentsList() {
   const [agents, setAgents] = useState([]);
 
   const history = useHistory();
+  const { expand } = useParams();
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/agents')
+    fetch('http://localhost:8080/api/agent')
       .then(response => {
         if (response.status === 200) {
           return response.json();
@@ -46,7 +47,7 @@ function AgentsList() {
 
   return (
     <main>
-          <h1>Field Agents</h1>
+      <h1>{expand ? 'Field Agents Expanded' : 'Field Agents Summary'}</h1>
       <button className="btn btn-primary my-4" onClick={() => history.push('/agents/add')}>
         <i className="bi bi-plus-circle"></i> Add Field Agent
       </button>
@@ -55,18 +56,40 @@ function AgentsList() {
       </Link> */}
       <table class="table table-hover">
         <thead>
-          <tr>
-            <th scope="col">Type</th>
-            <th scope="col">Column heading</th>
-            <th scope="col">Column heading</th>
-            <th scope="col">Column heading</th>
-          </tr>
-        </thead>
+          {expand ? <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First</th>
+            <th scope="col">Middle</th>
+            <th scope="col">Last</th>
+            <th scope="col">DOB</th>
+            <th scope="col">Height</th>
+                  <th scope="col">
+                    <div className="float-right mr-2">
+                        <Link className="btn btn-outline-primary btn-sm mr-2" to={`/`}>
+                            <i className="bi bi-pencil-square"></i> Summary
+                        </Link>
+                    </div></th></tr> : <tr>
+                    <th scope="col">ID</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Middle</th>
+                                <th scope="col">Last</th><th scope="col">
+                                <div className="float-right mr-2">
+                                    <Link className="btn btn-outline-primary btn-sm mr-2" to={`/${1}`}>
+                                        <i className="bi bi-pencil-square"></i> ... Expand
+                                    </Link>
+                                </div>
+                              </th></tr> }
+    </thead>
         <tbody>
           {agents.map(agent => (
             <tr key={agent.id}>
+              <td>{agent.agentId}</td>
               <td>{agent.firstName}</td>
+              <td>{agent.middleName}</td>
               <td>{agent.lastName}</td>
+              {expand ? <td>{agent.dob}</td> : <td></td>}
+              {expand ? <td>{agent.heightInInches}</td> : <></>}
+              {expand ? <td></td> : <></>}
               <td>
                 <div className="float-right mr-2">
                   <Link className="btn btn-primary btn-sm mr-2" to={`/agents/edit/${agent.id}`}>
