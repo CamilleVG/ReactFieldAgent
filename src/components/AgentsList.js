@@ -31,11 +31,11 @@ function AgentsList() {
       fetch(`http://localhost:8080/api/agent/${agentId}`, init)
         .then(response => {
           if (response.status === 204) {
-            // create a copy of the solar panels array
-            // remove the solar panel that we need to delete
+            // create a copy of the agents array
+            // remove the agent that we need to delete
             const newAgents = agents.filter(agent => agent.id !== agentId);
 
-            // update the solar panels state variable
+            // update the agents state variable
             setAgents(newAgents);
           } else {
             return Promise.reject(`Unexpected status code: ${response.status}`);
@@ -58,9 +58,6 @@ function AgentsList() {
       <button className="btn btn-primary my-4" onClick={() => history.push('/agents/add')}>
         <i className="bi bi-plus-circle"></i> Add Field Agent
       </button>
-      {/* <Link className="btn btn-primary my-4" to="/solarpanels/add">
-        <i className="bi bi-plus-circle"></i> Add Solar Panel
-      </Link> */}
       <table class="table table-hover">
         <thead>
           {expand ? <tr>
